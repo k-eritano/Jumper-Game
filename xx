@@ -1,0 +1,130 @@
+const block = document.getElementById('block');
+const hazard = document.getElementById('hazard');
+const startWindow = document.getElementById('startWindow');
+const startButton = document.getElementById('startButton');
+const endWindow = document.getElementById('endWindow');
+const restartButton = document.getElementById('restartButton');
+
+
+//Score counter set up
+let score = 0;
+let scoreInterval;
+
+//Formatting score as '00000'
+function formatScore(num) {
+    return num.toString().padStart(5, '0');
+}
+
+//Score incrementation
+function startScoreCounter() {
+    scoreInterval = setInterval(function(){
+        score++;
+        document.getElementById('score').textContent = formatScore(score);
+    }, 100); //Runs in centiseconds
+}
+
+//Start window and start button fade in on game screen
+startWindow.style.animation = 'fadeIn 2.5s linear forwards';
+startButton.style.animation = 'fadeIn 2.5s linear forwards';
+
+//When start button is pressed start window and button fade out and block fades in
+startButton.addEventListener('click', function() {
+    //fade out start window and button
+    startWindow.style.animation = 'fadeOut 0.5s linear forwards';
+    startButton.style.animation = 'fadeOut 0.5s linear forwards';
+
+    //Show hazard and block when button is clicked
+
+    /*need to revise to only fade in block and have hazard start moving after 
+    time lapses issue is when use fade in animation jump function stops working 
+    need to debug*/
+    hazard.style.display = 'block';
+    block.style.display = 'block';
+    hazard.style.animation = 'moveHazard 1s infinite linear';
+    //block.style.animation = 'fadeIn 2.5s linear forwards';
+
+    //Start score counter
+    startScoreCounter();
+});
+
+
+//function that after score gets to 20, hazard starts to come in
+
+function jump() {
+    //if statement checks there is no jump so not starting over midjump
+    if (block.classList != "jump") {
+        block.classList.add("jump");
+
+        //adding a timeout to remove jump class so can jump again
+        setTimeout(function (){
+            block.classList.remove("jump");
+        }, 300)
+    }
+}
+
+let isAlive = setInterval(function (){
+    //get current block Y position
+    let blockTop = parseInt(window.getComputedStyle(block).getPropertyValue("top"));
+    
+    //get current hazard  x position
+    let hazardLeft = parseInt(window.getComputedStyle(hazard).getPropertyValue("left"));
+
+    //debug console
+    //console.log('Block Top:', blockTop, 'Hazard Left:', hazardLeft); 
+    
+    //detect collision
+    if(hazardLeft <200 && hazardLeft >150 && blockTop >= 250) {
+        endWindow.style.visibility = 'visible';
+        endWindow.style.animation = 'fadeIn 2.5s linear forwards';
+        
+        restartButton.style.visibility = 'visible';
+        restartButton.style.animation = 'fadeIn 2.5s linear forwards';
+        
+        clearInterval(isAlive);
+    }
+}, 10)
+
+restartButton.addEventListener('click', function() {
+    //fade out start window and button
+    endWindow.style.animation = 'fadeOut 0.5s linear forwards';
+    restartButton.style.animation = 'fadeOut 0.5s linear forwards';
+
+    //Show hazard and block when button is clicked
+
+    /*need to revise to only fade in block and have hazard start moving after 
+    time lapses issue is when use fade in animation jump function stops working 
+    need to debug*/
+    hazard.style.display = 'block';
+    block.style.display = 'block';
+    hazard.style.animation = 'moveHazard 1s infinite linear';
+    //block.style.animation = 'fadeIn 2.5s linear forwards';
+
+    //Start score counter
+    startScoreCounter();
+
+    let isAlive = setInterval(function (){
+        //get current block Y position
+        let blockTop = parseInt(window.getComputedStyle(block).getPropertyValue("top"));
+        
+        //get current hazard  x position
+        let hazardLeft = parseInt(window.getComputedStyle(hazard).getPropertyValue("left"));
+    
+        //debug console
+        //console.log('Block Top:', blockTop, 'Hazard Left:', hazardLeft); 
+        
+        //detect collision
+        if(hazardLeft <200 && hazardLeft >150 && blockTop >= 250) {
+            endWindow.style.visibility = 'visible';
+            endWindow.style.animation = 'fadeIn 2.5s linear forwards';
+            
+            restartButton.style.visibility = 'visible';
+            restartButton.style.animation = 'fadeIn 2.5s linear forwards';
+            
+            clearInterval(isAlive);
+        }
+    }, 10)
+});
+
+document.addEventListener("keydown", function (event){
+    jump();
+})
