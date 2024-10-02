@@ -86,6 +86,8 @@ document.addEventListener('DOMContentLoaded', function(){
         //Fade out block and hazard
         block.style.animation = 'fadeOut 0.3s linear forwards';
         hazard.style.animation = 'fadeOut 0.3s linear forwards';
+
+        enableRestartButton();
     }            
 
     //Jump function
@@ -130,7 +132,7 @@ document.addEventListener('DOMContentLoaded', function(){
     });
 
     //Restart game when button is clicked
-    restartButton.addEventListener('click', function(){
+    function restartButtonClick() {
         //Hide end window and restart button
         endWindow.style.animation = 'fadeOut 0.5s linear forwards';
         restartButton.style.animation = 'fadeOut 0.5s linear forwards';
@@ -142,7 +144,13 @@ document.addEventListener('DOMContentLoaded', function(){
 
         //Call reset function
         resetGame();
-    });
+
+        restartButton.removeEventListener('click', restartButtonClick);
+    };
+
+    function enableRestartButton() {
+        restartButton.addEventListener('click', restartButtonClick);
+    }
 
     document.addEventListener("keydown", function (event){
         jump();
