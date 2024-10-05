@@ -9,7 +9,8 @@ document.addEventListener('DOMContentLoaded', function(){
 
 
     //Score counter set up
-    let score = 0;
+    let score= 0;
+    let highScore = 0;
     let scoreInterval;
     let isAliveInterval;
 
@@ -30,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function(){
     //Reset the game
     function resetGame () {
         //Reset score
-        score = 0;
+       score= 0;
         scoreDisplay.textContent = formatScore(0);
 
         //Reset block and hazard
@@ -71,6 +72,13 @@ document.addEventListener('DOMContentLoaded', function(){
 
         //Stop animations and clear score
         clearInterval(isAliveInterval);
+
+        //Calculate highscore
+        document.getElementById("lastScore").textContent = score;
+        if (score > highScore) {
+            highScore = score;
+        }
+        document.getElementById("highScore").textContent = highScore;
 
         //Fade in end screen
         endWindow.style.animation = 'fadeIn 2.5s linear forwards';
